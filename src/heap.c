@@ -2,6 +2,8 @@
 
 //| padding | prologue header | prologue footer | epilogue header |
 
+static char *heap_listp;
+
 int mm_init(){
 
     char *heap = sbrk(4*WSIZE);
@@ -16,6 +18,24 @@ int mm_init(){
 
     PUT(heap + (3 * WSIZE), PACK(0,1)); //epilogue header
 
-    return 0;
+    heap_listp = heap  + (2 * WSIZE);
 
+    return 0;
+}
+
+void *extend_heap(size_t size ){
+
+    size = (size + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1); //damn
+
+    char *bp = sbrk(size);
+    if(bp == (void *)-1)
+        return NULL;
+
+    PUT(bp, PACK(size,0));
+
+    PUT(bp + size - WSIZE, PACK(size,0));
+
+    PUT(bp + size, PACK(0,1));
+
+    return coalesce(bp + WSIZE);
 }
