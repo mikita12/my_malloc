@@ -4,6 +4,6 @@ void *my_malloc(size_t size){
     
 }
 
-void *free(void *_Nullable ptr){
+void my_free(void *_Nullable ptr){
 
 }
