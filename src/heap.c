@@ -1,4 +1,5 @@
 #include "allocator.h"
+#include "internal.h"
 
 //| padding | prologue header | prologue footer | epilogue header |
 
@@ -38,4 +39,8 @@ void *extend_heap(size_t size ){
     PUT(bp + size, PACK(0,1));
 
     return coalesce(bp + WSIZE);
+}
+
+void *coalesce(void *bp){
+    
 }
