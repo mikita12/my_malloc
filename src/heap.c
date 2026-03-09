@@ -41,6 +41,50 @@ void *extend_heap(size_t size ){
     return coalesce(bp + WSIZE);
 }
 
+//|   FREE  |ALLOCATED|   FREE  |
+//|ALLOCATED|ALLOCATED|   FREE  |
+//|   FREE  |ALLOCATED|ALLOCATED|
+//|ALLOCATED|ALLOCATED|ALLOCATED|
+
 void *coalesce(void *bp){
-    
+
+    size_t size = GET_SIZE(HDRP(bp));
+    size_t sizeBuf;
+
+    bool prev = GET_ALLOC(HDRP(PREV_BLKP(bp)));
+    bool next = GET_ALLOC(HDRP(NEXT_BLKP(bp)));
+
+    if(prev && next){
+        return bp;
+    }else if(prev && !next){
+
+        size += GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        PUT(HDRP(bp),PACK(size,0));
+        PUT(FTRP(bp),PACK(size,0));
+
+    }else if(!prev && next){
+
+        size += GET_SIZE(HDRP(PREV_BLKP(bp)));
+        bp = PREV_BLKP(bp);
+
+        PUT(HDRP(bp),PACK(size,0));
+        PUT(FTRP(bp),PACK(size,0));
+
+    }else{
+
+        char *bp_next;
+        char *bp_prev;
+
+        bp_next = NEXT_BLKP(bp);
+        bp_prev = PREV_BLKP(bp);
+
+        size += GET_SIZE(HDRP(bp_next)) + GET_SIZE(HDRP(bp_prev));
+
+        PUT(HDRP(bp_prev),PACK(size,0));
+        PUT(FTRP(bp_next),PACK(size,0));
+
+        bp = bp_prev;
+    }
+
+    return bp; //adres wskazujacy na payload polaczonego bloku
 }
