@@ -3,7 +3,7 @@
 
 //| padding | prologue header | prologue footer | epilogue header |
 
-static char *heap_listp;
+static char *heap_listp; //heap start
 
 int mm_init(){
 
@@ -23,28 +23,6 @@ int mm_init(){
 
     return 0;
 }
-
-void *extend_heap(size_t size ){
-
-    size = (size + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1); //damn
-
-    char *bp = sbrk(size);
-    if(bp == (void *)-1)
-        return NULL;
-
-    PUT(bp, PACK(size,0));
-
-    PUT(bp + size - WSIZE, PACK(size,0));
-
-    PUT(bp + size, PACK(0,1));
-
-    return coalesce(bp + WSIZE);
-}
-
-//|   FREE  |ALLOCATED|   FREE  |
-//|ALLOCATED|ALLOCATED|   FREE  |
-//|   FREE  |ALLOCATED|ALLOCATED|
-//|ALLOCATED|ALLOCATED|ALLOCATED|
 
 void *coalesce(void *bp){
 
@@ -86,5 +64,28 @@ void *coalesce(void *bp){
         bp = bp_prev;
     }
 
-    return bp; //adres wskazujacy na payload polaczonego bloku
+    return (char *)(bp); //adres wskazujacy na payload polaczonego bloku
 }
+
+void *extend_heap(size_t size ){
+
+    size = (size + (ALIGNMENT - 1)) & ~(ALIGNMENT - 1); //damn
+
+    char *bp = sbrk(size);
+    if(bp == (void *)-1)
+        return NULL;
+
+    PUT(bp, PACK(size,0));
+
+    PUT(bp + size - WSIZE, PACK(size,0));
+
+    PUT(bp + size, PACK(0,1));
+
+    return coalesce(bp + WSIZE);
+}
+
+//|   FREE  |ALLOCATED|   FREE  |
+//|ALLOCATED|ALLOCATED|   FREE  |
+//|   FREE  |ALLOCATED|ALLOCATED|
+//|ALLOCATED|ALLOCATED|ALLOCATED|
+
