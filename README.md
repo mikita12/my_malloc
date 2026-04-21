@@ -17,3 +17,8 @@ cd build
 cmake ..
 make
 ./test_malloc
+```
+
+
+##AI
+ai assisted in adding test_heap.c and setting CMake
