@@ -1,13 +1,13 @@
 # Custom Memory Allocator (C)
 
-Implementacja własnego malloc/free w C (implicit free list).
+Implementation of a custom `malloc`/`free` in C using an implicit free list.
 
 ## Features
 
 - malloc / free
-- coalescing (łączenie bloków)
-- first-fit
-- alignment (16 bytes)
+- block coalescing
+- first-fit allocation strategy
+- 16-byte alignment
 
 ## Build
 
