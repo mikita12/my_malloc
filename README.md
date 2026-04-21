@@ -20,5 +20,5 @@ make
 ```
 
 
-##AI
+## AI
 ai assisted in adding test_heap.c and setting CMake
