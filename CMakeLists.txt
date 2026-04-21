@@ -16,20 +16,45 @@ set(SOURCES
     src/heap.c
 )
 
+# =========================
 # Executable (test)
+# =========================
 add_executable(test_malloc
     tests/test_heap.c
     ${SOURCES}
 )
 
-# Warnings (jak -Wall -Wextra)
 target_compile_options(test_malloc PRIVATE
     -Wall
     -Wextra
     -g
 )
 
-# Address sanitizer (opcjonalnie mega polecane)
-# odkomentuj jak chcesz debugować pamięć
-#target_compile_options(test_malloc PRIVATE -fsanitize=address)
-#target_link_options(test_malloc PRIVATE -fsanitize=address)
+# =========================
+# OPTIONAL: Library version
+# =========================
+# Uncomment if you want to use this as a library
+#
+# add_library(my_malloc_lib
+#     ${SOURCES}
+# )
+#
+# target_include_directories(my_malloc_lib PUBLIC include)
+#
+# target_compile_options(my_malloc_lib PRIVATE
+#     -Wall
+#     -Wextra
+#     -g
+# )
+
+# =========================
+# OPTIONAL: Test linked with library
+# =========================
+# add_executable(test_malloc tests/test_heap.c)
+# target_link_libraries(test_malloc my_malloc_lib)
+
+# =========================
+# OPTIONAL: AddressSanitizer
+# =========================
+# target_compile_options(test_malloc PRIVATE -fsanitize=address)
+# target_link_options(test_malloc PRIVATE -fsanitize=address)
